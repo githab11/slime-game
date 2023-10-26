@@ -1,5 +1,4 @@
 import random
-import colorama
 from colorama import Fore, Back, Style
 
 # Define all vars
@@ -8,7 +7,10 @@ player_health = 10
 player_damage = 2
 slimehealth = random.randint(5, 7)
 slimedamage = random.randint(2, 3)
-skeleton_damage = random.randint(6, 9)
+skeleton_health = random.randint(6, 9)
+skeleton_damage = random.randint(3, 4)
+alive = True
+
 print(Fore.RED + "Welcome to my game.")
 
 # Import stats
@@ -38,6 +40,7 @@ def slime_attack():
             print(Fore.GREEN + "The slime attacked you for: " + str(slimedamage))
         else:
             print(Fore.GREEN + "Invalid input, detecting you would attack.")
+            player_health -= slimedamage
 
     if slimehealth < 0 or slimehealth == 0:
         print(Fore.LIGHTBLACK_EX + "You win!")
@@ -61,12 +64,71 @@ def slime_attack():
             print("Damage is now" + player_damage)
 
     if player_health <= 0:
+        alive = False
         print("You lose!")
+
+def skeleton_fight():
+    global player_health, player_damage, player_maxhealth, skeleton_health, skeleton_damage
+    print(Fore.LIGHTWHITE_EX + "You encounter a Skeleton!")
+
+    print(Fore.WHITE + "Skele's dmg is: " + str(slimedamage))
+    while skeleton_health >= 0:
+        skeleton_input = input("Would you like to attack the skeleton? (Y/N): ")
+        # Check if player says yes
+        if skeleton_input[0].lower() == 'y':
+            print("You have attacked the skeleton for" + player_damage)
+            # Change vars
+            skeleton_health -= player_damage
+            player_health -= skeleton_damage
+            print("The skeleton has attacked you for: " + skeleton_damage)
+        # Check if player says no
+        if skeleton_input[0].lower() == 'n':
+            print("You have chose not to attack")
+            print("The skeleton has attacked you for: " + skeleton_damage)
+    if skeleton_health == 0 or skeleton_health <= 0:
+        print("You win!")
+        # Reroll skeleton stats
+        skeleton_health = random.randint(6, 9)
+        skeleton_damage = random.randint(3, 4)
+
+        print(Fore.RED + "You have been healed to", player_maxhealth)
+        player_health = player_maxhealth
+
+    # Import leveling system
+        level_up1 = input("Would you like to level up strength or health??: ")
+        if level_up1[0].lower() == 'h' or level_up1[0].lower() == 'm': # input to increase health
+            player_maxhealth += 2
+            print("your max health has increased by 1, your damage is now", player_health)
+        elif level_up1[0].lower() == 'd' or level_up1[0].lower() == 's': # input to increase damage
+            player_damage += 2
+            print("your damage has increased by 2, your damage is now", player_damage)
+        else:
+            print("Invalid input, leveling up damage")
+            player_damage += 2
+            print("Damage is now" + player_damage)
+    if player_health == 0 or player_health >= 0:
+        alive = False
+        print("You died")
+
+
+
+
+
+def level_up():
+    global player_damage, player_health
+    if player_damage <= 4 and player_health <= 15:
+        advance = input("Would you like to advance to the next area? (Y/N): ")
+        if advance[0].lower() == 'y':
+            print("Advancing")
+            skeleton_fight()
+        elif advance[0].lower() == 'n':
+            slime_attack()
 
 
 # Actual game
-while True:
+while alive == True:
     stats(player_health, player_damage)
     slime_attack()
+    level_up()
 
 
