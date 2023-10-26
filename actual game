@@ -22,7 +22,7 @@ def stats(player_health, player_damage):
 
 # Import slime
 def slime_attack():
-    global player_health, slimehealth, slimedamage
+    global player_health, slimehealth, slimedamage, player_maxhealth, player_damage
     print(Fore.YELLOW + "You encounter a slime!")
     print(Fore.RED + "Slime's dmg is: " + str(slimedamage))
 
@@ -50,10 +50,10 @@ def slime_attack():
         player_health = player_maxhealth
         level_up = input("Would you like to level up strength or health??: ")
         if level_up[0].lower() == 'h' or 'm': # input to increase health
-            player_maxhealth  == player_maxhealth + 1
+            player_maxhealth += 1
             print("your max health has increased by 1, your damage is now", player_health)
-        if level_up[0].lower() == 'd': # input to increase damage
-            player_damage == player_damage + 1
+        if level_up[0].lower() == 'd' or 's': # input to increase damage
+            player_damage += 1
             print("your damage has increased by 1, your damage is now", player_damage)
 
     if player_health <= 0:
@@ -64,5 +64,5 @@ def slime_attack():
 while True:
     stats(player_health, player_damage)
     slime_attack()
-    
+
 
