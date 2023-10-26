@@ -1,62 +1,57 @@
 import random
-import math
+import colorama
+from colorama import Fore, Back, Style
 
-# define all vars
+# Define all vars
 player_maxhealth = 10
 player_health = 10
 player_damage = 2
-slimehealth = int(random.randint(5, 7))
-slimedamage = int(random.randint(2, 3))
+slimehealth = random.randint(5, 7)
+slimedamage = random.randint(2, 3)
 
-print("Welcome to my game.")
+print(Fore.RED + "Welcome to my game.")
 
-# import stats
+# Import stats
 def stats(player_health, player_damage):
-    view_stats = input("Would you like to view your stats (y/n)?: ")
+    view_stats = input(Fore.LIGHTGREEN_EX + "Would you like to view your stats (y/n)?: ")
     if view_stats == 'y':
-        print("Your health is: " , str(player_health))
-        print("Your damage is: " , str(player_damage))
+        print("Your health is: ", Fore.RED + str(player_health))
+        print("Your damage is: ", Fore.LIGHTRED_EX + str(player_damage))
     elif view_stats == 'n':
         pass
-# import slime
-def slime_attack(slimehealth, player_health, player_damage, slimedamage):
-    print("You encounter a slime!")
-    print("The slime's dmg is: " + str(slimedamage))
+
+# Import slime
+def slime_attack():
+    global player_health, slimehealth, slimedamage
+    print(Fore.YELLOW + "You encounter a slime!")
+    print(Fore.RED + "Slime's dmg is: " + str(slimedamage))
+
     while slimehealth >= 0:
-        print("The slime's hp is: " + str(slimehealth))
-        slime_input = input("Would you like to attack the slime? (y/n): ")
+        slime_input = input(Fore.LIGHTGREEN_EX + "Would you like to attack the slime? (y/n): ")
 
         if slime_input[0].lower() == 'y':
-            print("You attacked the slime for " + str(player_damage))
             slimehealth -= player_damage  # Update the slime's health
-            print("The slime's health is now: " + str(slimehealth))
-            print("The slime attacked you for:" + str(slimedamage))
+            print(Fore.LIGHTRED_EX + "The slime's health is: " + str(slimehealth))
+            print(Fore.RED + "You're now at " + str(player_health) + "!")
             player_health -= slimedamage
         elif slime_input[0].lower() == 'n':
-            print("The slime attacked you for:" + str(slimedamage))
+            print(Fore.GREEN + "The slime attacked you for: " + str(slimedamage))
         else:
-            print("Invalid input, detecting you would attack.")
+            print(Fore.GREEN + "Invalid input, detecting you would attack.")
 
-    if slimehealth <= 0:
-        print("You win!")
-        print("You have been healed to" + str(player_maxhealth) + "Health!")
+    if slimehealth < 0 or slimehealth == 0:
+        print(Fore.LIGHTBLACK_EX + "You win!")
+        print(Fore.RED + "You have been healed to " + str(player_maxhealth) + " Health!")
         player_health = player_maxhealth
-        # rerolling the slime stats
-        slimehealth = int(random.randint(5, 7))
-        slimedamage = int(random.randint(2, 3))
+        # Rerolling the slime stats
+        slimehealth = random.randint(5, 7)
+        slimedamage = random.randint(2, 3)
 
-    else:
+    if player_health <= 0:
         print("You lose!")
 
-# actual game
-stats(player_health, player_damage)
-slime_attack(slimehealth, player_health, player_damage, slimedamage)
-
-
-
-
-
-
-
-
-
+# Actual game
+while True:
+    stats(player_health, player_damage)
+    slime_attack()
+ 
