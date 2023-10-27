@@ -1,25 +1,29 @@
 import random
 from colorama import Fore, Back, Style
 
-devmode = input("Would you like to enable dev controls?: ")
+devmode = input("Would you like to enable dev controls? (Modify stats): ")
 if devmode[0].lower() == 'y':
     Setplayerdamage = int(input("Damage?: "))
     Setplayerhealth = int(input("Max Health?: "))
+    set_player_coins = int(input("How many coins do you want?: "))
     player_maxhealth = 10
     player_health = Setplayerhealth
     player_maxhealth = Setplayerhealth
     player_damage = Setplayerdamage
+    player_coins = set_player_coins
 else:
-    player_maxhealth = 10
-    player_health = 10
-    player_damage = 2
+    player_maxhealth = 12
+    player_health = 12
+    player_damage = 3
+    player_coins = 10
+
 # Define all vars
-slimehealth = random.randint(5, 7)
+slimehealth = random.randint(7, 10)
 slimedamage = random.randint(2, 3)
-skeleton_health = random.randint(6, 9)
-skeleton_damage = random.randint(3, 4)
+skeleton_health = random.randint(5, 10)
+skeleton_damage = random.randint(4, 5)
 alive = True
-advanced = True
+advanced = False
 
 print(Fore.RED + "Welcome to my game.")
 
@@ -29,17 +33,20 @@ def stats(player_health, player_damage):
     if view_stats == 'y':
         print("Your health is: ", Fore.RED + str(player_health))
         print("Your damage is: ", Fore.LIGHTRED_EX + str(player_damage))
+        print(Fore.LIGHTYELLOW_EX + "You have: " + str(player_coins) + " Coins!")
     elif view_stats == 'n':
         pass
 
 # Import slime
+
 def slime_attack():
-    global player_health, slimehealth, slimedamage, player_maxhealth, player_damage
+    global player_health, slimehealth, slimedamage, player_maxhealth, player_damage, advanced
+    advanced == False
     print(Fore.YELLOW + "You encounter a slime!")
     print(Fore.RED + "Slime's dmg is: " + str(slimedamage))
 
     while slimehealth >= 0:
-        slime_input = input(Fore.LIGHTGREEN_EX + "Would you like to attack the slime? (y/n): ")
+        slime_input = input(Fore.GREEN + "Would you like to attack the slime? (y/n): ")
 
         if slime_input[0].lower() == 'y':
             slimehealth -= player_damage  # Update the slime's health
@@ -56,7 +63,7 @@ def slime_attack():
         print(Fore.LIGHTBLACK_EX + "You win!")
 
         # Rerolling the slime stats
-        slimehealth = random.randint(5, 7)
+        slimehealth = random.randint(7, 10)
         slimedamage = random.randint(2, 3)
 
         print(Fore.RED + "You have been healed to " + str(player_maxhealth) + " Health!")
@@ -71,7 +78,7 @@ def slime_attack():
         else:
             print("Invalid input, leveling up damage")
             player_damage += 1
-            print("Damage is now" + player_damage)
+            print("Damage is now" + str(player_damage))
 
     if player_health <= 0:
         alive = False
@@ -97,7 +104,9 @@ def skeleton_fight():
             print("The skeleton has attacked you for: " + str(skeleton_damage))
     if skeleton_health == 0 or skeleton_health <= 0:
         print("You win!")
+
         # Reroll skeleton stats
+
         skeleton_health = random.randint(6, 9)
         skeleton_damage = random.randint(3, 4)
 
@@ -121,6 +130,30 @@ def skeleton_fight():
         print("You died")
 
 
+def shop():
+    global player_coins, alive, player_damage, player_maxhealth, Perma_Strength_Owned, Perma_Strength
+    if Perma_Strength_Owned == False:
+        shopinput = input("Would you like to enter the shop")
+        if shopinput[0].lower() == 'y':
+            Perma_Strength_Owned = False
+            Perma_Strength = player_damage + 2
+            Perma_Strength_Cost = 20
+            print("Selling: Strength potion")
+            print("Strength potion costs: ", Perma_Strength_Cost)
+            print("Strength potion permanently increases damage by 2")
+            purchasing = input("Would you like to purchase the Strength potion? (Y/N): ")
+            if purchasing[0].lower() == 'y':
+              if player_coins <= 20 or player_coins == 20:
+                Perma_Strength_Owned == True
+                player_damage = Perma_Strength
+                print("Your damage is now: " + player_damage)
+              elif purchasing[0].lower() == 'n':
+                print("You chose to not buy.")
+
+            
+        
+
+
 
 
 
@@ -141,5 +174,5 @@ while alive == True:
     stats(player_health, player_damage)
     slime_attack()
     level_up()
-    while advanced == True:
+    while advanced == True and alive == True:
         skeleton_fight()
