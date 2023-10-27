@@ -19,6 +19,7 @@ slimedamage = random.randint(2, 3)
 skeleton_health = random.randint(6, 9)
 skeleton_damage = random.randint(3, 4)
 alive = True
+advanced = True
 
 print(Fore.RED + "Welcome to my game.")
 
@@ -84,7 +85,7 @@ def skeleton_fight():
     while skeleton_health >= 0:
         skeleton_input = input("Would you like to attack the skeleton? (Y/N): ")
         # Check if player says yes
-        if skelton_input[0].lower() == 'y':
+        if skeleton_input[0].lower() == 'y':
             print("You have attacked the skeleton for " + str(player_damage))
             # Change vars
             skeleton_health -= player_damage
@@ -124,18 +125,21 @@ def skeleton_fight():
 
 
 def level_up():
-    global player_damage, player_health
+    global player_damage, player_health, advanced
     if player_damage >= 4 and player_health >= 15:
         advance = input("Would you like to advance to the next area? (Y/N): ")
         if advance[0].lower() == 'y':
             print("Advancing")
+            advanced == True
             skeleton_fight()
         elif advance[0].lower() == 'n':
             slime_attack()
 
 
-# Actual game
+# Actual game LMAO
 while alive == True:
     stats(player_health, player_damage)
     slime_attack()
     level_up()
+    while advanced == True:
+        skeleton_fight()
