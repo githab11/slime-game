@@ -1,12 +1,16 @@
 import random
 from colorama import Fore, Back, Style
 
+# import player starting stats
+
 player_maxhealth = 20
 player_health = 20
 player_damage = 4
 player_coins = 20
 bone_amount = 0
 slime_amount = 0
+
+# import slime stats
 
 slimehealth = random.randint(6, 8)
 slimedamage = random.randint(1, 2)
@@ -99,7 +103,7 @@ def skeleton_fight():
             print(Fore.GREEN + "The skeleton has attacked you for: " + str(skeleton_damage))
         elif skeleton_input[0].lower() == 'n':
             print(Fore.MAGENTA + "You have chosen not to attack")
-            player_health -= skeleton_damage    
+            player_health -= skeleton_damage
 
     if skeleton_health <= 0:
         print("You win!")
