@@ -1,0 +1,26 @@
+import random
+import math
+# Import stats
+player_name = input("What is your name?: ")
+player_level = 1
+player_xp = 0
+player_next_level_xp = 100
+# Function to gain XP
+def gain_xp(amount):
+    global player_xp, player_level, player_next_level_xp
+    player_xp += amount
+
+    # While loop to see if player xp is the next level's xp
+
+    while player_xp >= player_next_level_xp:
+        player_level += 1
+        player_xp -= player_next_level_xp
+        player_next_level_xp = player_next_level_xp * 1.2
+        print(player_name, "Has leveled up to level ", player_level)
+
+def print_values():
+    print(player_name, "Level:", player_level, "XP: ", player_xp, "/",  player_next_level_xp)
+print_values()
+
+
+
