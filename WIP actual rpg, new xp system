@@ -1,26 +1,75 @@
 import random
 import math
-# Import stats
+
+# Player stats
 player_name = input("What is your name?: ")
 player_level = 1
 player_xp = 0
 player_next_level_xp = 100
+player_health = 50
+min_sword_dmg = 5
+max_sword_dmg = 10
+additive_dmg = 0
+
+# Enemy stats
+enemy_name = "Goblin"
+enemy_level = 1
+enemy_health = 50
+enemy_attack_min = 5
+enemy_attack_max = 15
+
+
+# Inventory
+inventory = ["Sword", "Health Potion"]
+
+# Function to reroll sword damage
+def reroll_dmg():
+    global Sword
+    Sword = random.randint(min_sword_dmg, max_sword_dmg)
+
 # Function to gain XP
 def gain_xp(amount):
     global player_xp, player_level, player_next_level_xp
     player_xp += amount
 
-    # While loop to see if player xp is the next level's xp
-
     while player_xp >= player_next_level_xp:
         player_level += 1
         player_xp -= player_next_level_xp
-        player_next_level_xp = player_next_level_xp * 1.2
-        print(player_name, "Has leveled up to level ", player_level)
+        player_next_level_xp = math.floor(player_next_level_xp * 1.2)
+        print(player_name, "Has leveled up to level", player_level)
+        levelupinput = input("Upgrade sword damage (2) or health? (10)? : ")
+        if levelupinput[0].lower() == 's' or levelupinput[0].lower() == 'd':
+            print("Upgraded strength!")
+            additive_dmg =+ 2
+            print(f"You have: {Sword} Damage!")
+        elif levelupinput[0].lower() == 'h':
+            print("Upgraded Health!")
+            player_health =+ 10
+            print(f"You have: {player_health} Health!")
+
+
+
+
+
 
 def print_values():
-    print(player_name, "Level:", player_level, "XP: ", player_xp, "/",  player_next_level_xp)
-print_values()
+    print(player_name, "Level:", player_level, "XP:", player_xp, "/", player_next_level_xp)
 
+def fight():
+    global Sword, player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name
 
-
+    # Replace this condition with the actual combat logic
+    if player_health > 0 and enemy_health > 0:
+        enemy_attack = input(f"Would you like to attack the {enemy_name}? (Yes/No): ")
+        if enemy_attack[0].lower() == 'y':
+            # Combat logic here
+            actualdmg = random.randint(enemy_attack_min, enemy_attack_max)
+            print(f"The {enemy_name} has attacked you for: {actualdmg}")
+            plractualdmg = random.randint(min_sword_dmg, max_sword_dmg)
+            print(f"You've  attacked {enemy_name} for: {plractualdmg}")
+            
+        if enemy_attack[0].lower() == 'n':
+            actualdmg = random.randint(enemy_attack_min, enemy_attack_max)
+            print("The slime has attacked you for:" + actualdmg)
+            
+            
