@@ -45,7 +45,7 @@ def set_skeleton():
     enemy_coins = random.randint(5, 8)
     enemy_health = 50
     enemy_attack_min = 8
-    enemy_attack_max = 12
+    enemy_attack_max = 15
     Skeleton_test = 40
 
 # Function to gain XP
@@ -75,33 +75,44 @@ def print_values():
     print(f"{player_name} Level: {player_level} XP: {player_xp}/{player_next_level_xp} Coins: {coins} Damage: {min_sword_dmg}-{max_sword_dmg}")
 
 def fight():
-    global player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name, alive, coins, xp_gained, Skeleton_test, Slime_test
+    global player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name, alive, coins, xp_gained
+
     print(f"You have encountered a {enemy_name}!")
     print(f"The {enemy_name} has {enemy_health} health and deals {enemy_attack_min} <-> {enemy_attack_max} damage!")
-    while player_health > 0 and enemy_health > 0:
 
+    while player_health > 0 and enemy_health > 0:
         enemy_attack = input(f"Would you like to attack the {enemy_name}?: ")
         actualdmg = 0
+
         if enemy_attack.lower().startswith('y'):
+            # Initialize the random vars
+            player_misschance = random.randint(1, 10)
+            enemy_misschance = random.randint(1, 10)
             player_critchance = random.randint(1, 10)
             enemy_critchance = random.randint(1, 10)
-            if player_critchance == 10:
+
+            if player_critchance == 10 and player_misschance != 10:
                 plractualdmg = random.randint(min_sword_dmg, max_sword_dmg) * 1.5
                 print(f"You've attacked {enemy_name} for: {plractualdmg} With a CRIT!")
-                # Reroll the crit chance var so it doesnt repeat
-                player_critchance = random.randint(1, 10)
-            elif player_critchance != 10:
+            elif player_misschance != 10:
                 plractualdmg = random.randint(min_sword_dmg, max_sword_dmg)
                 print(f"You've attacked {enemy_name} for: {plractualdmg}")
-            if enemy_critchance == 10:
+            else:
+                print(f"The {enemy_name} has dodged!")
+
+            if enemy_critchance == 10 and enemy_misschance != 10:
                 actualdmg = random.randint(enemy_attack_min, enemy_attack_max) * 1.5
                 print(f"The {enemy_name} has attacked you for: {actualdmg} With a CRIT!")
-            elif enemy_critchance != 10:
+            elif enemy_misschance != 10:
                 actualdmg = random.randint(enemy_attack_min, enemy_attack_max)
                 print(f"The {enemy_name} has attacked you for: {actualdmg}")
+            else:
+                print(f"{player_name} has dodged!")
 
             # Update enemy's health
-            enemy_health -= plractualdmg
+            if enemy_misschance != 10:
+                enemy_health -= plractualdmg
+
             if enemy_health <= 0:
                 print(f"The {enemy_name} has been defeated!")
                 print(f"You have been healed to: {player_maxhealth}!")
@@ -110,9 +121,8 @@ def fight():
                 print(f"The {enemy_name} has dropped {enemy_coins} coins, you now have {coins} coins!")
 
                 # Define xp_gained here
-                xp_gained = 20 # You can adjust the XP gain as needed
+                xp_gained = 20  # You can adjust the XP gain as needed
                 gain_xp(xp_gained)
-
 
         elif enemy_attack.lower().startswith('n'):
             runningchance = random.randint(1, 10)
@@ -135,8 +145,9 @@ while alive and player_health > 0:
     if advancing == 0:
         fight()
         set_goblin()
-        if player_level == 5:
+        if player_level >= 5:
             advancinginput = input("Would you like to advance to the next area?:")
+            print_values()
             if advancinginput[0].lower() == 'y':
                 advancing = 1
                 set_skeleton()
