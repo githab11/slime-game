@@ -100,31 +100,29 @@ def fight():
 
         if enemy_attack.lower().startswith('y'):
             # Initialize the random vars
-            player_misschance = random.randint(1, 10)
-            enemy_misschance = random.randint(1, 10)
-            player_critchance = random.randint(1, 10)
-            enemy_critchance = random.randint(1, 10)
+            dodge_chance = random.randint(1, 10)
+            crit_chance = random.randint(1, 10)
 
-            if player_critchance == 10 and player_misschance != 10:
+            if crit_chance == 10 and dodge_chance != 10:
                 plractualdmg = random.randint(min_sword_dmg, max_sword_dmg) * 1.5
                 print(f"You've attacked {enemy_name} for: {plractualdmg} With a CRIT!")
-            elif player_misschance != 10:
+            elif dodge_chance != 10:
                 plractualdmg = random.randint(min_sword_dmg, max_sword_dmg)
                 print(f"You've attacked {enemy_name} for: {plractualdmg}")
             else:
                 print(f"The {enemy_name} has dodged!")
 
-            if enemy_critchance == 10 and enemy_misschance != 10:
+            if crit_chance == 10 and dodge_chance != 10:
                 actualdmg = random.randint(enemy_attack_min, enemy_attack_max) * 1.5
                 print(f"The {enemy_name} has attacked you for: {actualdmg} With a CRIT!")
-            elif enemy_misschance != 10:
+            elif dodge_chance != 10:
                 actualdmg = random.randint(enemy_attack_min, enemy_attack_max)
                 print(f"The {enemy_name} has attacked you for: {actualdmg}")
             else:
                 print(f"{player_name} has dodged!")
 
             # Update enemy's health
-            if enemy_misschance != 10:
+            if dodge_chance != 10:
                 enemy_health -= plractualdmg
 
             if enemy_health <= 0:
@@ -158,6 +156,7 @@ def fight():
 
 
 
+
 # Game loop
 while alive and player_health > 0:
     if advancing == 0:
@@ -185,5 +184,4 @@ while alive and player_health > 0:
 # Player has died, end the game
 if player_health <= 0:
     print(f"{player_name} has been defeated. Game over.")
-
 
