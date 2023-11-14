@@ -32,17 +32,17 @@ def reroll_dmg():
 # Function to set goblin stats
 
 def set_goblin():
-    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max
+    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Goblin"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 40 + (player_level - 1) * 5  # Scale goblin health with player level
-    enemy_attack_min = 5 + (player_level - 1)  # Scale goblin damage with player level
+    enemy_health = 40 + (player_level - 1) * 5
+    enemy_attack_min = 5 + (player_level - 1)
     enemy_attack_max = 10 + (player_level - 1)
     exp = 20 + (player_level) * 2
 
 # Skeleton Starting Stats
 def set_skeleton():
-    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max
+    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Skeleton"
     enemy_coins = random.randint(5, 8)
     enemy_health = 50 + (player_level - 1) * 5
@@ -51,12 +51,12 @@ def set_skeleton():
     exp = 40
 
 def set_dragon():
-    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max
+    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Dragon"
     enemy_coins = random.randint(15, 25)
-    enemy_health = 120 + (player_level - 1) * 15  # Adjusted for increased difficulty
-    enemy_attack_min = 18 + (player_level - 1)  # Adjusted for increased difficulty
-    enemy_attack_max = 25 + (player_level - 1)
+    enemy_health = 120
+    enemy_attack_min = 18
+    enemy_attack_max = 25
     exp = 100
 
 # Function to gain XP
@@ -71,16 +71,26 @@ def gain_xp(amount):
         player_xp -= player_next_level_xp
         player_next_level_xp = math.floor(player_next_level_xp * 1.2)
         print(f"{player_name} has leveled up to level {player_level}")
-        levelupinput = input("Upgrade sword damage (2) or health (10)? : ")
-        if levelupinput.lower().startswith('s'):
-            global max_sword_dmg  # Add this line
-            min_sword_dmg += 2
-            max_sword_dmg += 2
-            print(f"You have: {min_sword_dmg}-{max_sword_dmg} Damage!")
-        elif levelupinput.lower().startswith('h'):
-            player_health += 10
-            player_maxhealth = player_health
-            print(f"You have: {player_health} Health!")
+
+        valid_input = False
+        while not valid_input:
+            levelupinput = input("Upgrade sword damage (2) or health (10)? : ")
+
+            if levelupinput.lower().startswith('s'):
+                min_sword_dmg += 2
+                max_sword_dmg += 2
+                print(f"You have: {min_sword_dmg}-{max_sword_dmg} Damage!")
+                valid_input = True
+            elif levelupinput.lower().startswith('h'):
+                player_health += 10
+                player_maxhealth = player_health
+                print(f"You have: {player_health} Health!")
+                valid_input = True
+            else:
+                print("Invalid input. Please enter 's' to upgrade sword damage or 'h' to upgrade health.")
+
+    print_values()
+
 
 
 def print_values():
@@ -92,8 +102,8 @@ def fight():
     print(f"You have encountered a {enemy_name}!")
     print(f"The {enemy_name} has {enemy_health} health and deals {enemy_attack_min} <-> {enemy_attack_max} damage!")
 
-    plractualdmg = 0  # Initialize plractualdmg here
-    actualdmg = 0  # Initialize actualdmg here
+    plractualdmg = 0  # Initialize plractualdmg
+    actualdmg = 0  # Initialize actualdmg
 
     while player_health > 0 and enemy_health > 0:
         enemy_attack = input(f"Would you like to attack the {enemy_name}?: ")
@@ -163,8 +173,8 @@ while alive and player_health > 0:
         fight()
         set_goblin()
         if player_level >= 5:
-            advancinginput = input("Would you like to advance to the next area?:")
             print_values()
+            advancinginput = input("Would you like to advance to the next area?:")
             if advancinginput[0].lower() == 'y':
                 advancing = 1
                 set_skeleton()
@@ -175,7 +185,7 @@ while alive and player_health > 0:
                     if advancinginput.lower() == 'y':
                         set_dragon()  # New addition: Set the dragon enemy
                         fight()
-                        # Add any other necessary code for the dragon arena
+
             elif advancinginput[0].lower() == 'n':
                 advancing = 0
     if advancing == 1:
@@ -184,4 +194,3 @@ while alive and player_health > 0:
 # Player has died, end the game
 if player_health <= 0:
     print(f"{player_name} has been defeated. Game over.")
-
