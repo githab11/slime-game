@@ -1,16 +1,22 @@
 import random
 import math
 
-# Patch Notes - Version 0.6: Game Rebalance
+# Patch Notes - Version 0.65: Game Rebalance
 
 # General:
-# - Adjusted enemy stats to provide a more balanced and engaging combat experience.
-# - Tweaked player stats and leveling up system for smoother progression.
+# - Adjusted game progression for a more balanced experience.
+# - Revised enemy encounters for a smoother difficulty curve.
+
+# Player Stats:
+# - Increased initial sword damage to 10-15 for a more manageable early-game experience.
+# - Adjusted XP required for leveling up to provide a more consistent progression.
+# - Increased sword damage upgrade to +2 for more impactful scaling.
+# - Health upgrade now adds +10 for better survivability.
 
 # Enemy Stats:
 # - Goblin:
-#   - Reduced health to 20 for a quicker early-game challenge.
-#   - Adjusted attack range to 2-5 for more balanced combat.
+#   - Health reduced to 20 for an easier early-game challenge.
+#   - Adjusted attack range to 2-5 for balanced combat.
 
 # - Skeleton:
 #   - Decreased health to 30 for a progressive difficulty curve.
@@ -18,18 +24,10 @@ import math
 
 # - Dragon:
 #   - Lowered health to 80 for a challenging late-game encounter.
-#   - Balanced attack range to 10-20 for strategic gameplay.
-
-# Player Stats:
-# - Adjusted initial sword damage to 8-12 for a more challenging early-game experience.
-# - Modified leveling up system:
-#   - Increased XP required for leveling up by 20% for a more gradual progression.
-#   - Reduced sword damage upgrade to +1 for balanced scaling.
-#   - Lowered health upgrade to +5 for strategic decision-making.
+#   - Adjusted attack range to 10-20 for strategic gameplay.
 
 # Bug Fixes:
 # - Corrected variable assignments in the game loop for more accurate gameplay.
-
 
 # Player stats
 player_name = input("What is your name?: ")
@@ -39,8 +37,8 @@ player_xp = 0
 player_next_level_xp = 100
 player_health = 100
 player_maxhealth = 100
-min_sword_dmg = 8
-max_sword_dmg = 12
+min_sword_dmg = 10  # Adjusted initial sword damage
+max_sword_dmg = 15  # Adjusted initial sword damage
 additive_dmg = 0
 coins = 0
 alive = True
@@ -57,16 +55,15 @@ exp = 20
 # Function to reroll sword damage
 def reroll_dmg():
     global min_sword_dmg, max_sword_dmg
-    min_sword_dmg = random.randint(5, 10)
-    max_sword_dmg = random.randint(min_sword_dmg, 15)
-
+    min_sword_dmg = random.randint(10, 15)  # Rerolled damage
+    max_sword_dmg = random.randint(min_sword_dmg, 20)  # Rerolled damage
 
 # Adjusted enemy stats
 def set_goblin():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Goblin"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 20
+    enemy_health = 20  # Adjusted enemy health
     enemy_attack_min = 2
     enemy_attack_max = 5
 
@@ -104,15 +101,15 @@ def gain_xp(amount):
 
         valid_input = False
         while not valid_input:
-            levelupinput = input("Upgrade sword damage (1) or health (5)? : ")  # Adjusted upgrade values
+            levelupinput = input("Upgrade sword damage (2) or health (10)? : ")  # Adjusted upgrade values
 
             if levelupinput.lower().startswith('s'):
-                min_sword_dmg += 1
-                max_sword_dmg += 1
+                min_sword_dmg += 2  # Increased sword damage upgrade
+                max_sword_dmg += 2  # Increased sword damage upgrade
                 print(f"You have: {min_sword_dmg}-{max_sword_dmg} Damage!")
                 valid_input = True
             elif levelupinput.lower().startswith('h'):
-                player_health += 5
+                player_health += 10  # Increased health upgrade
                 player_maxhealth = player_health
                 print(f"You have: {player_health} Health!")
                 valid_input = True
@@ -120,11 +117,6 @@ def gain_xp(amount):
                 print("Invalid input. Please enter 's' to upgrade sword damage or 'h' to upgrade health.")
 
     print_values()
-
-
-
-
-
 
 def fight():
     global exp, player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name, alive, coins, xp_gained
@@ -142,7 +134,7 @@ def fight():
             # Initialize the random vars
             dodge_chance = random.randint(1, 10)
             crit_chance = random.randint(1, 10)
-            # I used to have a seperate var for each dodge/critchance, but now I just changed the values.
+            # I used to have a separate var for each dodge/critchance, but now I just changed the values.
 
             if crit_chance == 10 and dodge_chance != 10:
                 plractualdmg = random.randint(min_sword_dmg, max_sword_dmg) * 1.5
@@ -193,12 +185,6 @@ def fight():
 
         print(f"The {enemy_name} has {enemy_health} health left!")
         print(f"You have {player_health} health left!")
-
-
-
-
-
-
 
 # Game loop
 advance = 0
