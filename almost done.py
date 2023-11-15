@@ -1,7 +1,7 @@
 import random
 import math
 
-# Patch Notes - Version 0.66: Game Rebalance
+# Patch Notes - Version 0.7: Power-Up Edition
 
 # General:
 # - Adjusted game progression for a more balanced experience.
@@ -11,7 +11,10 @@ import math
 # - Increased initial sword damage to 10-15 for a more manageable early-game experience.
 # - Adjusted XP required for leveling up to provide a more consistent progression.
 # - Increased sword damage upgrade to +2 for more impactful scaling.
-# - Health upgrade is now 60 to provide a nice diffrence between each enemy.
+# - Health upgrade is now 60 to provide a nice difference between each enemy.
+
+# Power-Ups:
+# - Added a power-up system at level 3. Players can now choose to increase their crit chance or dodge chance.
 
 # Enemy Stats:
 # - Goblin:
@@ -52,6 +55,10 @@ enemy_attack_min = 5
 enemy_attack_max = 10
 exp = 20
 
+# Add these lines right after defining player_maxhealth
+critchance = 10  # Initial crit chance
+dodgechance = 10  # Initial dodge chance
+
 # Function to reroll sword damage
 def reroll_dmg():
     global min_sword_dmg, max_sword_dmg
@@ -63,7 +70,7 @@ def set_goblin():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Goblin"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 50  # Adjusted enemy health
+    enemy_health = 20  # Adjusted enemy health
     enemy_attack_min = 4
     enemy_attack_max = 9
 
@@ -88,7 +95,7 @@ def print_values():
 
 # Function to gain XP
 def gain_xp(amount):
-    global player_xp, player_level, player_next_level_xp, min_sword_dmg, max_sword_dmg, player_health
+    global player_xp, player_level, player_next_level_xp, min_sword_dmg, max_sword_dmg, player_health, critchance, dodgechance
     player_xp += amount
     print(f"You have gained: {amount} XP!")
     print(f"{player_xp}/{player_next_level_xp}")
@@ -98,6 +105,12 @@ def gain_xp(amount):
         player_xp -= player_next_level_xp
         player_next_level_xp = math.floor(player_next_level_xp * 1.2)  # Adjusted XP required for leveling up
         print(f"{player_name} has leveled up to level {player_level}")
+        if player_level == 3:
+            powerupinput = input(f"You have reached level {player_level}!, would you like to increase your crit chance or your dodge chance?: ")
+            if powerupinput[0].lower() == 'c':
+                critchance -= 1
+            elif powerupinput[0].lower() == 'd':
+                dodgechance -= 1
 
         valid_input = False
         while not valid_input:
@@ -134,10 +147,12 @@ def fight():
             # Initialize the random vars
             dodge_chance = random.randint(1, 10)
             crit_chance = random.randint(1, 10)
-            # I used to have a separate var for each dodge/critchance, but now I just changed the values.
+            dodge_chance_player = random.randint(1, dodgechance)
+            crit_chance_player = random.randint(1, critchance)
 
-            if crit_chance == 10 and dodge_chance != 10:
-                plractualdmg = random.randint(min_sword_dmg, max_sword_dmg) * 1.5
+
+            if crit_chance == random.randint(1, crit_chance) and dodge_chance != random.randint(1, dodgechance):
+                plractualdmg = random.randint(min_sword_dmg, max_sword_dmg) * 1.7
                 print(f"You've attacked {enemy_name} for: {plractualdmg} With a CRIT!")
             elif dodge_chance != 10:
                 plractualdmg = random.randint(min_sword_dmg, max_sword_dmg)
@@ -146,7 +161,7 @@ def fight():
                 print(f"The {enemy_name} has dodged!")
 
             if crit_chance == 9 and dodge_chance != 9:
-                actualdmg = random.randint(enemy_attack_min, enemy_attack_max) * 1.5
+                actualdmg = random.randint(enemy_attack_min, enemy_attack_max) * 1.4
                 print(f"The {enemy_name} has attacked you for: {actualdmg} With a CRIT!")
             elif dodge_chance != 9:
                 actualdmg = random.randint(enemy_attack_min, enemy_attack_max)
@@ -206,11 +221,6 @@ while player_health > 0:
     elif advance == 2:
         set_dragon()
         fight()
-
-# Player has died, end the game
-if player_health <= 0:
-    print(f"{player_name} has been defeated. Game over.")
-
 
 # Player has died, end the game
 if player_health <= 0:
