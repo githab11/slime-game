@@ -1,7 +1,7 @@
 import random
 import math
 
-# Patch Notes - Version 0.65: Game Rebalance
+# Patch Notes - Version 0.66: Game Rebalance
 
 # General:
 # - Adjusted game progression for a more balanced experience.
@@ -11,12 +11,12 @@ import math
 # - Increased initial sword damage to 10-15 for a more manageable early-game experience.
 # - Adjusted XP required for leveling up to provide a more consistent progression.
 # - Increased sword damage upgrade to +2 for more impactful scaling.
-# - Health upgrade now adds +10 for better survivability.
+# - Health upgrade is now 60 to provide a nice diffrence between each enemy.
 
 # Enemy Stats:
 # - Goblin:
 #   - Health reduced to 20 for an easier early-game challenge.
-#   - Adjusted attack range to 2-5 for balanced combat.
+#   - Adjusted attack range to 4-9 for balanced combat.
 
 # - Skeleton:
 #   - Decreased health to 30 for a progressive difficulty curve.
@@ -35,8 +35,8 @@ player_name = input("What is your name?: ")
 player_level: int = 1
 player_xp = 0
 player_next_level_xp = 100
-player_health = 100
-player_maxhealth = 100
+player_health = 60
+player_maxhealth = 60
 min_sword_dmg = 10  # Adjusted initial sword damage
 max_sword_dmg = 15  # Adjusted initial sword damage
 additive_dmg = 0
@@ -63,9 +63,9 @@ def set_goblin():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Goblin"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 20  # Adjusted enemy health
-    enemy_attack_min = 2
-    enemy_attack_max = 5
+    enemy_health = 50  # Adjusted enemy health
+    enemy_attack_min = 4
+    enemy_attack_max = 9
 
 def set_skeleton():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
@@ -186,7 +186,7 @@ def fight():
         print(f"The {enemy_name} has {enemy_health} health left!")
         print(f"You have {player_health} health left!")
 
-# Game loop
+# Game loop, had to rewrite this
 advance = 0
 while player_health > 0:
     if advance == 0:
@@ -196,14 +196,21 @@ while player_health > 0:
             going_up = input("Would you like to level up?: ")
             if going_up.lower().startswith('y'):
                 advance = 1
-                set_skeleton()
-                fight()
-                if player_level >= 10:
-                    going_up1 = input("Would you like to level up?: ")
-                    if going_up1.lower().startswith('y'):
-                        advance = 2
-                        set_dragon()
-                        fight()
+    elif advance == 1:
+        set_skeleton()
+        fight()
+        if player_level >= 10:
+            going_up1 = input("Would you like to level up?: ")
+            if going_up1.lower().startswith('y'):
+                advance = 2
+    elif advance == 2:
+        set_dragon()
+        fight()
+
+# Player has died, end the game
+if player_health <= 0:
+    print(f"{player_name} has been defeated. Game over.")
+
 
 # Player has died, end the game
 if player_health <= 0:
