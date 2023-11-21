@@ -1,14 +1,13 @@
 import random
 import math
 
-# Patch Notes - Version 0.8, Class Update!:
+# Patch Notes - Version 0.9: Shop Update!:
 
-# - Classes have been added
+# - You can now either buy a Strength ring or some healing potions!
+# - Strength ring will increase damage and healing pots will heal you!
 
-# - Class 1: Commoner - Base Stats
-# - Class 2: Glass Cannon - Higher Damage, Less HP
-# - Class 3: Tank - Higher HP Less Damage
-# I cant use the code without these var things right here? I might just have to init vars before putting them in an if statment.
+
+
 
 player_level = 1
 player_xp = 0
@@ -32,58 +31,69 @@ print("The Glass Cannon, more damage less hp")
 
 class_input = input("What class would you like to play?: ")
 
-if class_input[0].lower() == 'C':
+if class_input[0].lower() == 'c':
     print("You have selected the Commoner")
-    player_level = 1
-    player_xp = 0
-    player_next_level_xp = 100
-    player_health = 25
-    player_maxhealth = 60
-    min_sword_dmg = 10
-    max_sword_dmg = 15
-    additive_dmg = 0
-    coins = 0
-    alive = True
-    advancing = 0
-elif class_input[0].lower() == 'G':
-    print("You have selected the Glass Cannon")
-    player_level = 1
-    player_xp = 0
-    player_next_level_xp = 100
-    player_health = 25
-    player_maxhealth = 25
+    crit_chance = 10
+    dodge_chance = 10
+    player_health = 40
     min_sword_dmg = 12
-    max_sword_dmg = 14
-    additive_dmg = 0
-    coins = 0
-    alive = True
-    advancing = 0
-elif class_input[0].lower() == 'T':
+    max_sword_dmg = 18
+    # ?
+    StrengthRingOwned = False
+    StrengthRingDamage = 2
+    StrengthRingCost = 15
+
+    HealingPotionAmount = 0
+    HealingPotionCost = 7
+    HealingPotionHealth = 20
+elif class_input[0].lower() == 'g':
+    print("You have selected the Glass Cannon")
+    crit_chance = 8
+    dodge_chance = 12
+    player_health = 30
+    min_sword_dmg = 14
+    max_sword_dmg = 16
+    # ?
+    StrengthRingOwned = False
+    StrengthRingDamage = 2
+    StrengthRingCost = 15
+
+    HealingPotionAmount = 0
+    HealingPotionCost = 7
+    HealingPotionHealth = 20
+elif class_input[0].lower() == 't':
     print("You have selected Tank")
-    player_level = 1
-    player_xp = 0
-    player_next_level_xp = 100
-    player_health = 25
-    player_maxhealth = 80
-    min_sword_dmg = 6
-    max_sword_dmg = 10
-    additive_dmg = 0
-    coins = 0
-    alive = True
-    advancing = 0
+    crit_chance = 12
+    dodge_chance = 8
+    player_health = 50
+    min_sword_dmg = 8
+    max_sword_dmg = 12
+    # ?
+    StrengthRingOwned = False
+    StrengthRingDamage = 2
+    StrengthRingCost = 15
+
+    HealingPotionAmount = 0
+    HealingPotionCost = 7
+    HealingPotionHealth = 20
 elif class_input.lower() == 'jack':
     print("Welcome Jack!")
-    player_level = 1
-    player_xp = 0
-    player_next_level_xp = 100
+    crit_chance = 10
+    dodge_chance = 10
     player_health = 10000
-    player_maxhealth = 10000
     min_sword_dmg = 10000
     max_sword_dmg = 10000
-    additive_dmg = 0
-    coins = 1000
-    alive = True
-    advancing = 0
+    # ?
+    StrengthRingOwned = False
+    StrengthRingDamage = 2
+    StrengthRingCost = 15
+
+    HealingPotionAmount = 0
+    HealingPotionCost = 7
+    HealingPotionHealth = 20
+
+
+
 
 
 
@@ -99,31 +109,85 @@ exp = 20
 crit_chance = 10  # Initial crit chance
 dodge_chance = 10  # Initial dodge chance
 
-# Adjusted enemy stats
+
+# Starting goblin stats
+enemy_name = "Goblin"
+enemy_coins = random.randint(3, 6)
+enemy_health = 40
+enemy_attack_min = 3
+enemy_attack_max = 8
+exp = 20
+# I LOVE BALANCING!!!!!!!!!!!!!
 def set_goblin():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Goblin"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 20  # Adjusted enemy health
-    enemy_attack_min = 4
-    enemy_attack_max = 9
+    enemy_health = 40
+    enemy_attack_min = 3
+    enemy_attack_max = 8
+    exp = 20
 
+# Adjusted skeleton stats
 def set_skeleton():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Skeleton"
     enemy_coins = random.randint(5, 8)
-    enemy_health = 30
-    enemy_attack_min = 5
-    enemy_attack_max = 10
+    enemy_health = 50
+    enemy_attack_min = 7
+    enemy_attack_max = 11
+    exp = 40
 
+# Adjusted dragon stats
 def set_dragon():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Dragon"
     enemy_coins = random.randint(15, 25)
     enemy_health = 80
-    enemy_attack_min = 10
-    enemy_attack_max = 20
+    enemy_attack_min = 8
+    enemy_attack_max = 15
+    exp = 100
 
+def openshop():
+    global coins, player_health, player_maxhealth, min_sword_dmg, max_sword_dmg, StrengthRingOwned, HealingPotionAmount
+
+    print("Welcome to my shop!")
+    viewing = input("Would you like to enter?: ")
+
+    if viewing[0].lower() == 'y':
+        print("Here are the items.")
+        print(f"Strength Ring, Will increase damage by {StrengthRingDamage}. Cost: {StrengthRingCost} coins.")
+        print(f"Healing Potion, Will heal you for {HealingPotionHealth}. Cost: {HealingPotionCost} coins.")
+
+        shopinp = input("What would you like to buy?: ")
+
+        if shopinp[0].lower() == 's' and not StrengthRingOwned:
+            if coins >= StrengthRingCost:
+                print("Thank you for shopping!")
+                StrengthRingOwned = True
+                min_sword_dmg += StrengthRingDamage
+                max_sword_dmg += StrengthRingDamage
+                coins -= StrengthRingCost
+                print(f"You now have {min_sword_dmg}-{max_sword_dmg} Damage!")
+            else:
+                print("You don't have enough coins to buy the Strength Ring.")
+
+        elif shopinp[0].lower() == 'h':
+            amount = input("How many Healing Potions would you like to buy?: ")
+
+            if amount.isdigit() and int(amount) > 0:
+                total_cost = int(amount) * HealingPotionCost
+
+                if coins >= total_cost:
+                    print("Thank you for shopping!")
+                    HealingPotionAmount += int(amount)
+                    coins -= total_cost
+                    print(f"You now have {HealingPotionAmount} Healing Potions.")
+                else:
+                    print("You don't have enough coins to buy the specified number of Healing Potions.")
+            else:
+                print("Invalid input. Please enter a valid number greater than 0 for the Healing Potion quantity.")
+
+                
 
 
 # Function to gain XP
@@ -162,10 +226,9 @@ def gain_xp(amount):
             else:
                 print("Invalid input. Please enter 's' to upgrade sword damage or 'h' to upgrade health.")
 
-    print_values()
 
 def fight():
-    global exp, player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name, alive, coins, xp_gained, crit_chance, dodge_chance
+    global HealingPotionHealth, HealingPotionAmount, player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name, alive, coins, xp_gained, crit_chance, dodge_chance
 
     print(f"You have encountered a {enemy_name}!")
     print(f"The {enemy_name} has {enemy_health} health and deals {enemy_attack_min} <-> {enemy_attack_max} damage!")
@@ -224,6 +287,15 @@ def fight():
                 print(f"You have been healed for {player_maxhealth}!")
                 player_health = player_maxhealth
                 break  # End the fight
+        elif enemy_attack.lower().startswith('h'):
+            if HealingPotionAmount > 0:
+
+                print("You have chosen to heal!")
+                print(f"You have healed for: {HealingPotionHealth}")
+                player_health += HealingPotionAmount
+                HealingPotionAmount =- 1
+                input(f"You now have {HealingPotionAmount}")
+                pass
 
         if actual_dmg > 0:
             player_health -= actual_dmg
@@ -238,14 +310,14 @@ while player_health > 0:
     if advance == 0:
         set_goblin()
         fight()
-        if player_level >= 5:
+        if player_level >= 3:
             going_up = input("Would you like to level up?: ")
             if going_up.lower().startswith('y'):
                 advance = 1
     elif advance == 1:
         set_skeleton()
         fight()
-        if player_level >= 10:
+        if player_level >= 5:
             going_up1 = input("Would you like to level up?: ")
             if going_up1.lower().startswith('y'):
                 advance = 2
