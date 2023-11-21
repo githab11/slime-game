@@ -3,7 +3,7 @@ import math
 
 
 
-# Patch Notes - Version 9.01, Forgot to add shop into the game
+# Patch Notes - Version 9.02, Minor Print Functions
 
 
 
@@ -234,6 +234,7 @@ def fight():
     global HealingPotionHealth, HealingPotionAmount, player_level, player_name, player_health, enemy_health, enemy_attack_max, enemy_attack_min, enemy_name, alive, coins, xp_gained, crit_chance, dodge_chance
 
     print(f"You have encountered a {enemy_name}!")
+    print(f"You can heal if you have healing potions, you have {HealingPotionAmount}")
     print(f"The {enemy_name} has {enemy_health} health and deals {enemy_attack_min} <-> {enemy_attack_max} damage!")
 
     plr_actual_dmg = 0  # Initialize plr_actual_dmg
@@ -241,6 +242,7 @@ def fight():
 
     while player_health > 0 and enemy_health > 0:
         enemy_attack = input(f"Would you like to attack the {enemy_name}?: ")
+
 
         if enemy_attack.lower().startswith('y'):
             # Initialize the random vars
