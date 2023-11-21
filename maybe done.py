@@ -1,10 +1,13 @@
 import random
 import math
 
-# Patch Notes - Version 0.9: Shop Update!:
 
-# - You can now either buy a Strength ring or some healing potions!
-# - Strength ring will increase damage and healing pots will heal you!
+
+# Patch Notes - Version 9.01, Forgot to add shop into the game
+
+
+
+# I cant use the code without these var things right here? I might just have to init vars before putting them in an if statment.
 
 
 
@@ -187,7 +190,7 @@ def openshop():
             else:
                 print("Invalid input. Please enter a valid number greater than 0 for the Healing Potion quantity.")
 
-                
+
 
 
 # Function to gain XP
@@ -312,8 +315,10 @@ while player_health > 0:
         fight()
         if player_level >= 3:
             going_up = input("Would you like to level up?: ")
+
             if going_up.lower().startswith('y'):
                 advance = 1
+                openshop()
     elif advance == 1:
         set_skeleton()
         fight()
@@ -321,6 +326,7 @@ while player_health > 0:
             going_up1 = input("Would you like to level up?: ")
             if going_up1.lower().startswith('y'):
                 advance = 2
+                openshop()
     elif advance == 2:
         set_dragon()
         fight()
