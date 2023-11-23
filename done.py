@@ -1,24 +1,15 @@
 import random
 import math
 import time
-from colorama import init, Fore
+from colorama import Fore, Style
 
 
 
 
 
 
-init(autoreset=True)
 
-
-
-
-
-
-# Realm of Legends - Patch Notes - Version 1.0, Early Beta!
-
-# - added a new variation to enemies, 1/4 chance to be slightly more powerful!
-#- Colour!!!!!!!!!!!!!!
+# Realm of Legends - Patch Notes - Version 1.1, Achivment Update!
 
 
 
@@ -34,23 +25,33 @@ additive_dmg = 0
 coins = 0
 alive = True
 advancing = 0
+StrengthRingOwned = False
+StrengthRingDamage = 2
+StrengthRingCost = 15
+
+HealingPotionAmount = 0
+HealingPotionCost = 7
+HealingPotionHealth = 20
+
+from colorama import Fore, Style
+
 
 
 # Player stats
 print(Fore.CYAN + "Welcome to Realm of Legends! Hopy you enjoy!")
 player_name = input("What is your name?: ")
-print("Here are the classes you can play!")
+print(Fore.LIGHTCYAN_EX + "Here are the classes you can play!")
 time.sleep(1)
-print("The Commoner, regular stats")
+print(Fore.LIGHTGREEN_EX + "The Commoner, regular stats")
 time.sleep(0.4)
-print("The Tank: More HP less damage")
+print(Fore.BLUE + "The Tank: More HP less damage")
 time.sleep(0.4)
-print("The Glass Cannon, more damage less hp")
+print(Fore.LIGHTWHITE_EX + "The Glass Cannon, more damage less hp")
 time.sleep(2)
 class_input = input("What class would you like to play?: ")
 
 if class_input[0].lower() == 'c':
-    print(Fore.LIGHTWHITE_EX + "You have selected the Commoner")
+    print(Fore.LIGHTGREEN_EX + "You have selected the Commoner")
     crit_chance = 10
     dodge_chance = 10
     player_health = 40
@@ -65,7 +66,7 @@ if class_input[0].lower() == 'c':
     HealingPotionCost = 7
     HealingPotionHealth = 20
 elif class_input[0].lower() == 'g':
-    print(Fore.MAGENTA + "You have selected the Glass Cannon")
+    print(Fore.LIGHTWHITE_EX + "You have selected the Glass Cannon")
     crit_chance = 8
     dodge_chance = 12
     player_health = 30
@@ -80,7 +81,7 @@ elif class_input[0].lower() == 'g':
     HealingPotionCost = 7
     HealingPotionHealth = 20
 elif class_input[0].lower() == 't':
-    print(Fore.GREEN + "You have selected Tank")
+    print(Fore.BLUE + "You have selected Tank")
     crit_chance = 8
     dodge_chance = 12
     player_health = 50
@@ -102,13 +103,15 @@ elif class_input.lower() == 'game dev':
     min_sword_dmg = 10000
     max_sword_dmg = 10000
     # ?
-    StrengthRingOwned = False
-    StrengthRingDamage = 2
+    StrengthRingOwned = True
+    StrengthRingDamage = 10
     StrengthRingCost = 15
 
     HealingPotionAmount = 0
     HealingPotionCost = 7
     HealingPotionHealth = 20
+else:
+    pass
 
 
 
@@ -136,8 +139,27 @@ enemy_attack_min = 3
 enemy_attack_max = 8
 exp = 20
 
+# Achievement system
+achievements = {
+    'First Victory': False,
+    'Goblin Slayer': False,
+    'Dragon Conqueror': False,
+    'Shopaholic': False,
+    'Master Swordsman': False,  # New achievement
+    'Survivor': False,  # New achievement
+    # Add more achievements as needed
+}
+def show_achievements():
+    print(Fore.YELLOW + "Achievements:")
+    for achievement, unlocked in achievements.items():
+        status = "Unlocked" if unlocked else "Locked"
+        print(Fore.RESET + f"{achievement}: {status}")
 
-
+def unlock_achievement(achievement_name):
+    if not achievements[achievement_name]:
+        achievements[achievement_name] = True
+        print(Fore.GREEN + f"Achievement Unlocked: {achievement_name}")
+        show_achievements()  # Display achievements after unlocking
 
 # el goblino
 def set_goblin():
@@ -251,10 +273,8 @@ def gain_xp(amount):
     while player_xp >= player_next_level_xp:
         player_level += 1
         player_xp -= player_next_level_xp
-        player_next_level_xp = math.floor(player_next_level_xp * 1.2)  # Adjusted XP required for leveling up
-        print(Fore.LIGHTCYAN_EX + f"{player_name} has leveled up to level {player_level}")
+        player_next_level_xp = math.floor(player_next_level_xp * 1.2)
 
-        # Increase crit chance and dodge chance with each level
         crit_chance += 1
         dodge_chance += 1
 
@@ -268,20 +288,27 @@ def gain_xp(amount):
 
         valid_input = False
         while not valid_input:
-            level_up_input = input(Fore.RED + "Upgrade sword damage (2) or health (10)? : ")  # Adjusted upgrade values
+            level_up_input = input(Fore.RED + "Upgrade sword damage (2) or health (10)? : ")
 
             if level_up_input.lower().startswith('s'):
-                min_sword_dmg += 2  # Increased sword damage upgrade
-                max_sword_dmg += 2  # Increased sword damage upgrade
+                min_sword_dmg += 2
+                max_sword_dmg += 2
                 print(Fore.RED + f"You have: {min_sword_dmg}-{max_sword_dmg} Damage!")
                 valid_input = True
             elif level_up_input.lower().startswith('h'):
-                player_health += 10  # Increased health upgrade
+                player_health += 10
                 player_maxhealth = player_health
                 print(Fore.RED + f"You have: {player_health} Health!")
                 valid_input = True
             else:
                 print(Fore.RED + "Invalid input. Please enter 's' to upgrade sword damage or 'h' to upgrade health.")
+
+        # Check for achievements when leveling up
+        if player_level == 5:
+            unlock_achievement('Master Swordsman')
+        elif player_level == 10:
+            unlock_achievement('Survivor')
+
 
 
 def fight():
@@ -297,15 +324,13 @@ def fight():
     while player_health > 0 and enemy_health > 0:
         enemy_attack = input(Fore.LIGHTGREEN_EX + f"Would you like to attack the {enemy_name}?: ")
 
-
         if enemy_attack.lower().startswith('y'):
-            # Initialize the random vars
             dodge_chance_player = random.randint(1, dodge_chance)
             crit_chance_player = random.randint(1, crit_chance)
 
             if crit_chance_player == crit_chance and dodge_chance_player != dodge_chance:
                 plr_actual_dmg = random.randint(min_sword_dmg, max_sword_dmg) * 1.5
-                print(Fore.LIGHTRED_EX + f"You've attacked {enemy_name} for: {plr_actual_dmg} With a CRIT!")
+                print(Fore.BLUE + f"You've attacked {enemy_name} for: {plr_actual_dmg} With a CRIT!")
             elif dodge_chance_player != dodge_chance:
                 plr_actual_dmg = random.randint(min_sword_dmg, max_sword_dmg)
                 print(Fore.RED + f"You've attacked {enemy_name} for: {plr_actual_dmg}")
@@ -335,6 +360,15 @@ def fight():
                 xp_gained = exp
                 gain_xp(xp_gained)
 
+                # Check for achievements when defeating an enemy
+                if not achievements['First Victory']:
+                    unlock_achievement('First Victory')
+
+                if enemy_name == 'Goblin':
+                    unlock_achievement('Goblin Slayer')
+                elif enemy_name == 'Dragon':
+                    unlock_achievement('Dragon Conqueror')
+
         elif enemy_attack.lower().startswith('n'):
             running_chance = random.randint(1, 10)
             if running_chance == 9:
@@ -348,19 +382,17 @@ def fight():
                 break  # End the fight
         elif enemy_attack.lower().startswith('h'):
             if HealingPotionAmount > 0:
-
                 print("You have chosen to heal!")
                 print(f"You have healed for: {HealingPotionHealth}")
                 player_health += HealingPotionAmount
-                HealingPotionAmount =- 1
-                print(f"You now have {HealingPotionAmount}")
-                pass
+                HealingPotionAmount -= 1
+                print(f"You now have {HealingPotionAmount} Healing Potions.")
 
         if actual_dmg > 0:
             player_health -= actual_dmg
 
-        print(f"The {enemy_name} has {enemy_health} health left!")
-        print(f"You have {player_health} health left!")
+        print(Fore.RED + f"The {enemy_name} has {enemy_health} health left!")
+        print(Fore.LIGHTRED_EX + f"You have {player_health} health left!")
 
 # Game loop, had to rewrite this
 advance = 0
@@ -398,6 +430,7 @@ while player_health > 0:
                 advance = 2
                 openshop()
     elif advance == 2:
+
         fireorregular = random.randint(1, 4)
         if fireorregular != 4:
             set_fire_dragon()
@@ -412,3 +445,6 @@ while player_health > 0:
 # Player has died, end the game
 if player_health <= 0:
     print(f"{player_name} has been defeated. Game over.")
+
+if achievements['Goblin Slayer'] and achievements['Dragon Conqueror']:
+    unlock_achievement('Shopaholic')
