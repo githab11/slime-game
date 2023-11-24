@@ -9,7 +9,9 @@ from colorama import Fore, Style
 
 
 
-# Realm of Legends - Patch Notes - Version 1.1, Achivment Update!
+# Realm of Legends - Patch Notes - Version 1.2, Achivment Update 2.0!
+
+# - New achivments!
 
 
 
@@ -69,7 +71,7 @@ if class_input[0].lower() == 'c':
 elif class_input[0].lower() == 'g':
     print(Fore.LIGHTWHITE_EX + "You have selected the Glass Cannon")
     crit_chance = 12
-    dodge_chance = 8 
+    dodge_chance = 8
     player_health = 35
     min_sword_dmg = 14
     max_sword_dmg = 15
