@@ -9,9 +9,11 @@ from colorama import Fore, Style
 
 
 
-# Realm of Legends - Patch Notes - Version 1.2, Achivment Update 2.0!
+# Realm of Legends - Patch Notes - Version 1.4, New Enemy Class!
 
-# - New achivments!
+# - Added the dark knight class, should be stronger then the dragon and the fire dragon.
+# - also added the stronger dark knight class but who cares
+# - Removed herobrine.
 
 
 
@@ -62,14 +64,7 @@ if class_input[0].lower() == 'c':
     player_health = 40
     min_sword_dmg = 10
     max_sword_dmg = 12
-    # ?
-    StrengthRingOwned = False
-    StrengthRingDamage = 2
-    StrengthRingCost = 15
 
-    HealingPotionAmount = 0
-    HealingPotionCost = 7
-    HealingPotionHealth = 20
 elif class_input[0].lower() == 'g':
     print(Fore.LIGHTWHITE_EX + "You have selected the Glass Cannon")
     crit_chance = 15
@@ -78,13 +73,7 @@ elif class_input[0].lower() == 'g':
     min_sword_dmg = 14
     max_sword_dmg = 15
     # ?
-    StrengthRingOwned = True
-    StrengthRingDamage = 2
-    StrengthRingCost = 15
 
-    HealingPotionAmount = 0
-    HealingPotionCost = 7
-    HealingPotionHealth = 20
 elif class_input[0].lower() == 't':
     print(Fore.BLUE + "You have selected Tank")
     crit_chance = 5
@@ -92,14 +81,7 @@ elif class_input[0].lower() == 't':
     player_health = 50
     min_sword_dmg = 8
     max_sword_dmg = 12
-    # ?
-    StrengthRingOwned = False
-    StrengthRingDamage = 2
-    StrengthRingCost = 15
 
-    HealingPotionAmount = 0
-    HealingPotionCost = 7
-    HealingPotionHealth = 20
 elif class_input[0].lower() == ',':
     print(Fore.RED + "Welcome Jack!")
     crit_chance = 100
@@ -107,17 +89,24 @@ elif class_input[0].lower() == ',':
     player_health = 10000
     min_sword_dmg = 10000
     max_sword_dmg = 10000
-    # ?
-    StrengthRingOwned = True
-    StrengthRingDamage = 10
-    StrengthRingCost = 15
 
-    HealingPotionAmount = 0
-    HealingPotionCost = 7
-    HealingPotionHealth = 20
-else:
-    pass
 
+# Crit scroll
+StrengthRingOwned = False
+StrengthRingDamage = 2
+StrengthRingCost = 15
+
+HealingPotionAmount = 0
+HealingPotionCost = 7
+HealingPotionHealth = 20
+
+CritScroll = False
+CritScrollChance = 5
+CritScrollCost = 50
+
+DodgeScrollOwned = False
+DodgeScrollChance = 5
+DodgeScrollCost = 40
 
 
 
@@ -147,7 +136,6 @@ achievements = {
     'First Victory': False,
     'Goblin Slayer': False,
     'Damn Bandits!': False,
-    'First Level': False,
     # Mid Game
     'Skeleton Killer': False,
     'Game Win Get': False,
@@ -176,7 +164,7 @@ def set_goblin():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Goblin"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 40
+    enemy_health = 50
     enemy_attack_min = 3
     enemy_attack_max = 8
     exp = 20
@@ -185,7 +173,7 @@ def set_bandit():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Bandit"
     enemy_coins = random.randint(3, 6)
-    enemy_health = 50
+    enemy_health = 60
     enemy_attack_min = 5
     enemy_attack_max = 10
     exp = 25
@@ -197,7 +185,7 @@ def set_skeleton():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Skeleton"
     enemy_coins = random.randint(5, 8)
-    enemy_health = 50
+    enemy_health = 50 + 10
     enemy_attack_min = 7
     enemy_attack_max = 11
     exp = 30
@@ -206,7 +194,7 @@ def set_skeleton_warrior():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Skeleton Warrior"
     enemy_coins = random.randint(6, 10)
-    enemy_health = 50
+    enemy_health = 50 + 10
     enemy_attack_min = 8
     enemy_attack_max = 12
     exp = 35
@@ -216,10 +204,10 @@ def set_fire_dragon():
     global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
     enemy_name = "Fire Dragon"
     enemy_coins = random.randint(20, 30)
-    enemy_health = 90
+    enemy_health = 85
     enemy_attack_min = 12
-    enemy_attack_max = 20
-    exp = 120
+    enemy_attack_max = 16
+    exp = 60
 
 # Adjusted dragon stats
 def set_dragon():
@@ -227,20 +215,37 @@ def set_dragon():
     enemy_name = "Dragon"
     enemy_coins = random.randint(15, 25)
     enemy_health = 80
-    enemy_attack_min = 8
+    enemy_attack_min = 10
     enemy_attack_max = 15
-    exp = 100
+    exp = 50
+def set_strong_dark_knight():
+    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
+    enemy_name = "Dark Knight"
+    enemy_coins = random.randint(15, 20)
+    enemy_health = 80
+    enemy_attack_min = 18
+    enemy_attack_max = 20
+    exp = 80
+def set_dark_knight():
+    global enemy_name, enemy_coins, enemy_health, enemy_attack_min, enemy_attack_max, exp
+    enemy_name = "Dark Knight"
+    enemy_coins = random.randint(10, 15)
+    enemy_health = 90
+    enemy_attack_min = 15
+    enemy_attack_max = 17
+    exp = 50
 
 def openshop():
-    global coins, player_health, player_maxhealth, min_sword_dmg, max_sword_dmg, StrengthRingOwned, HealingPotionAmount
+    global coins, player_health, player_maxhealth, min_sword_dmg, max_sword_dmg, StrengthRingOwned, HealingPotionAmount, DodgeScrollOwned, dodge_chance
 
-    print(Fore.YELLOW+ "Welcome to my shop!")
+    print(Fore.YELLOW + "Welcome to my shop!")
     viewing = input(Fore.LIGHTCYAN_EX + "Would you like to enter?: ")
 
     if viewing[0].lower() == 'y':
         print(Fore.WHITE + "Here are the items.")
         print(Fore.LIGHTRED_EX + f"Strength Ring, Will increase damage by {StrengthRingDamage}. Cost: {StrengthRingCost} coins.")
         print(Fore.RED + f"Healing Potion, Will heal you for {HealingPotionHealth}. Cost: {HealingPotionCost} coins.")
+        print(Fore.LIGHTYELLOW_EX + f"Dodge Scroll, Will increase dodge chance by {DodgeScrollChance}%. Cost: {DodgeScrollCost} coins.")
 
         shopinp = input("What would you like to buy?: ")
 
@@ -255,6 +260,31 @@ def openshop():
                 print(Fore.RED + f"You now have {min_sword_dmg}-{max_sword_dmg} Damage!")
             else:
                 print(Fore.LIGHTRED_EX + "You don't have enough coins to buy the Strength Ring.")
+        elif shopinp[0].lower() == 'h':
+            amount = input(Fore.RED + "How many Healing Potions would you like to buy?: ")
+
+            if amount.isdigit() and int(amount) > 0:
+                total_cost = int(amount) * HealingPotionCost
+
+                if coins >= total_cost:
+                    print(Fore.YELLOW + "Thank you for shopping!")
+                    HealingPotionAmount += int(amount)
+                    coins -= total_cost
+                    print(Fore.RESET + f"You now have {HealingPotionAmount} Healing Potions.")
+                else:
+                    print(Fore.RESET + "You don't have enough coins to buy the specified number of Healing Potions.")
+            else:
+                print(Fore.RESET + "Invalid input. Please enter a valid number greater than 0 for the Healing Potion quantity.")
+
+        elif shopinp[0].lower() == 'd' and not DodgeScrollOwned:
+            if coins >= DodgeScrollCost:
+                print(Fore.CYAN + "Thank you for shopping!")
+                DodgeScrollOwned = True
+                dodge_chance += DodgeScrollChance
+                coins -= DodgeScrollCost
+                print(Fore.LIGHTYELLOW_EX + f"You now have {dodge_chance}% Dodge Chance!")
+            else:
+                print(Fore.LIGHTRED_EX + "You don't have enough coins to buy the Dodge Scroll.")
 
         elif shopinp[0].lower() == 'h':
             amount = input(Fore.RED + "How many Healing Potions would you like to buy?: ")
@@ -460,7 +490,7 @@ while player_health > 0:
 
         fireorregular = random.randint(1, 4)
         if fireorregular != 4:
-            set_dragon
+            set_dragon()
             fight()
             fireorregular = random.randint(1, 4)
             min_damage_changer = 3
