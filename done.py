@@ -9,10 +9,10 @@ from colorama import Fore, Style
 
 
 
-# Realm of Legends - Patch Notes - Version 1.4, New Enemy Class!
+# Realm of Legends - Patch Notes - Version 1.5, New Shop Items!!
 
-# - Added the dark knight class, should be stronger then the dragon and the fire dragon.
-# - also added the stronger dark knight class but who cares
+# - Added 2 New Shop Items!
+# - Crit Scroll And Dodge Scroll!
 # - Removed herobrine.
 
 
@@ -246,6 +246,7 @@ def openshop():
         print(Fore.LIGHTRED_EX + f"Strength Ring, Will increase damage by {StrengthRingDamage}. Cost: {StrengthRingCost} coins.")
         print(Fore.RED + f"Healing Potion, Will heal you for {HealingPotionHealth}. Cost: {HealingPotionCost} coins.")
         print(Fore.LIGHTYELLOW_EX + f"Dodge Scroll, Will increase dodge chance by {DodgeScrollChance}%. Cost: {DodgeScrollCost} coins.")
+        print(Fore.LIGHTGREEN_EX + f"Crit Scroll, Will increase crit chance by {CritScrollChance}%. Cost {CritScrollCost} coins.")
 
         shopinp = input("What would you like to buy?: ")
 
@@ -283,6 +284,16 @@ def openshop():
                 dodge_chance += DodgeScrollChance
                 coins -= DodgeScrollCost
                 print(Fore.LIGHTYELLOW_EX + f"You now have {dodge_chance}% Dodge Chance!")
+            elif shopinp[0].lower() == 'c' and not CritScroll:
+                if coins >= CritScrollCost:
+                    print(Fore.LIGHTRED_EX + "Thank you for shopping!")
+                    CritScroll = True
+                    crit_chance += CritScrollChance
+                    coins -= DodgeScrollCost
+                    prin(Fore.LIGHTYELLOW_EX + f"You now have {crit_chance}% Crit Chance!")
+                elif coins <= CritScrollChance:
+                    print("You dont have enough coins!")
+
             else:
                 print(Fore.LIGHTRED_EX + "You don't have enough coins to buy the Dodge Scroll.")
 
