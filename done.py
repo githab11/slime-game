@@ -2,6 +2,8 @@ import random
 import math
 import time
 from colorama import Fore, Style
+import pickle
+
 
 
 
@@ -43,19 +45,91 @@ max_damage_changer = 2
 player_health_changer = 10
 
 
+def save_game():
+    game_state = {
+        'player_level': player_level,
+        'player_xp': player_xp,
+        'player_next_level_xp': player_next_level_xp,
+        'player_health': player_health,
+        'player_maxhealth': player_maxhealth,
+        'min_sword_dmg': min_sword_dmg,
+        'max_sword_dmg': max_sword_dmg,
+        'additive_dmg': additive_dmg,
+        'coins': coins,
+        'alive': alive,
+        'advancing': advancing,
+        'StrengthRingOwned': StrengthRingOwned,
+        'StrengthRingDamage': StrengthRingDamage,
+        'StrengthRingCost': StrengthRingCost,
+        'HealingPotionAmount': HealingPotionAmount,
+        'HealingPotionCost': HealingPotionCost,
+        'HealingPotionHealth': HealingPotionHealth,
+        'CritScroll': CritScroll,
+        'CritScrollChance': CritScrollChance,
+        'CritScrollCost': CritScrollCost,
+        'DodgeScrollOwned': DodgeScrollOwned,
+        'DodgeScrollChance': DodgeScrollChance,
+        'DodgeScrollCost': DodgeScrollCost,
+        'achievements': achievements
+    }
+
+    with open('savegame.pkl', 'wb') as file:
+        pickle.dump(game_state, file)
+    print("Game saved successfully.")
+
+# Function to load the game state
+def load_game():
+    global player_level, player_xp, player_next_level_xp, player_health, player_maxhealth, min_sword_dmg, max_sword_dmg, additive_dmg, coins, alive, advancing, StrengthRingOwned, StrengthRingDamage, StrengthRingCost, HealingPotionAmount, HealingPotionCost, HealingPotionHealth, CritScroll, CritScrollChance, CritScrollCost, DodgeScrollOwned, DodgeScrollChance, DodgeScrollCost, achievements
+
+    try:
+        with open('savegame.pkl', 'rb') as file:
+            game_state = pickle.load(file)
+
+        player_level = game_state['player_level']
+        player_xp = game_state['player_xp']
+        player_next_level_xp = game_state['player_next_level_xp']
+        player_health = game_state['player_health']
+        player_maxhealth = game_state['player_maxhealth']
+        min_sword_dmg = game_state['min_sword_dmg']
+        max_sword_dmg = game_state['max_sword_dmg']
+        additive_dmg = game_state['additive_dmg']
+        coins = game_state['coins']
+        alive = game_state['alive']
+        advancing = game_state['advancing']
+        StrengthRingOwned = game_state['StrengthRingOwned']
+        StrengthRingDamage = game_state['StrengthRingDamage']
+        StrengthRingCost = game_state['StrengthRingCost']
+        HealingPotionAmount = game_state['HealingPotionAmount']
+        HealingPotionCost = game_state['HealingPotionCost']
+        HealingPotionHealth = game_state['HealingPotionHealth']
+        CritScroll = game_state['CritScroll']
+        CritScrollChance = game_state['CritScrollChance']
+        CritScrollCost = game_state['CritScrollCost']
+        DodgeScrollOwned = game_state['DodgeScrollOwned']
+        DodgeScrollChance = game_state['DodgeScrollChance']
+        DodgeScrollCost = game_state['DodgeScrollCost']
+        achievements = game_state['achievements']
+
+        print("Game loaded successfully.")
+    except FileNotFoundError:
+        print("No saved game found.")
+
+
+
+
 # Player stats
 print(Fore.CYAN + "Welcome to Realm of Legends! Hopy you enjoy!")
 
 player_name = input("What is your name?: ")
 print(Fore.LIGHTCYAN_EX + "Here are the classes you can play!")
 time.sleep(1)
-print(Fore.LIGHTGREEN_EX + "The Commoner, regular stats")
+print(Fore.LIGHTGREEN_EX + "Commoner, regular stats")
 time.sleep(0.4)
-print(Fore.BLUE + "The Tank: More HP less damage")
+print(Fore.BLUE + "Tank: More HP less damage")
 time.sleep(0.4)
-print(Fore.LIGHTWHITE_EX + "The Glass Cannon, more damage less hp")
-time.sleep(2)
-class_input = input("What class would you like to play?: ")
+print(Fore.LIGHTWHITE_EX + "Glass Cannon, more damage less hp")
+time.sleep(0.4)
+class_input = input(Fore.RED + "What class would you like to play?: ")
 
 if class_input[0].lower() == 'c':
     print(Fore.LIGHTGREEN_EX + "You have selected the Commoner")
@@ -112,23 +186,6 @@ DodgeScrollCost = 40
 
 
 
-# Starting goblin stats
-enemy_name = "Goblin"
-enemy_coins = random.randint(3, 6)
-enemy_health = 50
-enemy_attack_min = 5
-enemy_attack_max = 10
-exp = 20
-
-
-
-# Starting goblin stats
-enemy_name = "Goblin"
-enemy_coins = random.randint(3, 6)
-enemy_health = 40
-enemy_attack_min = 3
-enemy_attack_max = 8
-exp = 20
 
 # Achievement system
 achievements = {
@@ -236,13 +293,14 @@ def set_dark_knight():
     exp = 50
 
 def openshop():
-    global coins, player_health, player_maxhealth, min_sword_dmg, max_sword_dmg, StrengthRingOwned, HealingPotionAmount, DodgeScrollOwned, dodge_chance
-
+    global coins, player_health, player_maxhealth, min_sword_dmg, max_sword_dmg, StrengthRingOwned, HealingPotionAmount, DodgeScrollOwned, dodge_chance, CritScroll, CritScrollCost, CritScrollChance, crit_chance
+    save_game()
     print(Fore.YELLOW + "Welcome to my shop!")
     viewing = input(Fore.LIGHTCYAN_EX + "Would you like to enter?: ")
 
     if viewing[0].lower() == 'y':
         print(Fore.WHITE + "Here are the items.")
+        print(Fore.YELLOW + f"You have {coins} coins!")
         print(Fore.LIGHTRED_EX + f"Strength Ring, Will increase damage by {StrengthRingDamage}. Cost: {StrengthRingCost} coins.")
         print(Fore.RED + f"Healing Potion, Will heal you for {HealingPotionHealth}. Cost: {HealingPotionCost} coins.")
         print(Fore.LIGHTYELLOW_EX + f"Dodge Scroll, Will increase dodge chance by {DodgeScrollChance}%. Cost: {DodgeScrollCost} coins.")
@@ -341,6 +399,7 @@ def gain_xp(amount):
 
         valid_input = False
         while not valid_input:
+            print(f"You're now level {player_level}")
             level_up_input = input(Fore.RED + f"Upgrade sword damage ({min_damage_changer}) or health ({player_health_changer})? : ")
 
             if level_up_input.lower().startswith('s'):
@@ -404,6 +463,7 @@ def fight():
                 player_health = player_maxhealth
                 coins += enemy_coins
                 print(Fore.YELLOW + f"The {enemy_name} has dropped {enemy_coins} coins, you now have {coins} coins!")
+                save_game()
 
                 xp_gained = exp
                 gain_xp(xp_gained)
@@ -460,65 +520,99 @@ def fight():
 
 
 
+
 # Game loop, had to rewrite this
 advance = 0
 
 while player_health > 0:
     if advance == 0:
-        goblinbandit = random.randint(1, 4)
-        if goblinbandit != 4:
-            set_goblin()
-            fight()
+        walking1 = random.randint(1, 5)
+        if walking1 <= 4:
             goblinbandit = random.randint(1, 4)
-        elif goblinbandit == 4:
-            set_bandit()
-            fight()
-            goblinbandit = random.randint(1, 4)
+            if goblinbandit != 4:
+                set_goblin()
+                fight()
+            elif goblinbandit == 4:
+                set_bandit()
+                fight()
+        elif walking1 == 5:
+            openshop()
 
-        if player_level >= 3:
+        if player_level >= 3 and not advance:
             going_up = input(Fore.MAGENTA + "Would you like to level up?: ")
             if going_up.lower().startswith('y'):
                 advance = 1
-                openshop()
+
     elif advance == 1:
-        skeleton_or_warrior = random.randint(1, 4)
-        if skeleton_or_warrior != 4:
-            set_skeleton()
-            fight()
+        walking2 = random.randint(1, 5)
+        if walking2 <= 4:
             skeleton_or_warrior = random.randint(1, 4)
-        elif skeleton_or_warrior == 4:
-            set_skeleton_warrior()
-            fight()
-            skeleton_or_warrior = random.randint(1, 4)
-        if player_level >= 5:
+            if skeleton_or_warrior != 4:
+                set_skeleton()
+                fight()
+            elif skeleton_or_warrior == 4:
+                set_skeleton_warrior()
+                fight()
+        elif walking2 == 5:
+            openshop()
+
+        if player_level >= 5 and not advance:
             going_up1 = input(Fore.MAGENTA + "Would you like to level up?: ")
             if going_up1.lower().startswith('y'):
                 advance = 2
-                openshop()
+                min_damage_changer = 3
+                max_damage_changer = 3
+                player_health_changer = 20
+
     elif advance == 2:
-
-
-
-        fireorregular = random.randint(1, 4)
-        if fireorregular != 4:
-            set_dragon()
-            fight()
+        walking3 = random.randint(1, 5)
+        if walking3 <= 4:
             fireorregular = random.randint(1, 4)
-            min_damage_changer = 3
-            max_damage_changer = 3
-            player_health_changer = 20
+            if fireorregular != 4:
+                set_dragon()
+                fight()
+            elif fireorregular == 4:
+                set_fire_dragon()
+                fight()
+        elif walking3 == 5:
+            openshop()
 
-        elif fireorregular == 4:
-            set_fire_dragon()
-            fight()
-            fireorregular = random.randint(1, 4)
-            min_damage_changer = 3
-            max_damage_changer = 3
-            player_health_changer = 20
+        if player_level >= 10 and not advance:
+            going_up2 = input(Fore.MAGENTA + "Would you like to level up?: ")
+            if going_up2.lower().startswith('y'):
+                advance = 3
+            elif advance == 3:
+                walking4 = random.randint(1, 5)
+                if walking4 <= 4:
+                    dark_knight_chance = random.randint(1, 4)
+                    if dark_knight_chance != 4:
+                        set_dark_knight()
+                        fight()
+                    elif dark_knight_chance == 4:
+                        set_strong_dark_knight()
+                        fight()
+                elif walking4 == 5:
+                    openshop()
+
+    # Additional conditions for advancing beyond stage 2, if needed
 
 # Player has died, end the game
 if player_health <= 0:
     print(f"{player_name} has been defeated. Game over.")
 
 if achievements['Dragon Conqueror'] and achievements['Firey Death Killer']:
+    unlock_achievement('Game Win Get')
+
+
+
+
+
+
+
+# Player has died, end the game
+if player_health <= 0:
+    print(f"{player_name} has been defeated. Game over.")
+
+if achievements['Dragon Conqueror'] and achievements['Firey Death Killer']:
+
     unlock_achievement('Game Win Get')
