@@ -191,6 +191,7 @@ DodgeScrollCost = 40
 achievements = {
     # Early Game
     'First Victory': False,
+    'Strength Ring Get': False,
     'Goblin Slayer': False,
     'Damn Bandits!': False,
     # Mid Game
@@ -200,7 +201,6 @@ achievements = {
     # Late Game
     'Dragon Conqueror': False,
     'Firey Death Killer': False,
-    'Strength Ring Get': False,
     'Master Swordsman': False,
 
 }
